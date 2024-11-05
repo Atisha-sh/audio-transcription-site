@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Audio to Text Transcription</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f4f8;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h2 {
+            color: #4a90e2;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        input[type="file"] {
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px solid #4a90e2;
+            border-radius: 5px;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="file"]:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #007bff;
+        }
+
+        p {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #4a90e2;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 400px;
+            background-color: #e9f5ff;
+            color: #333;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h2>Audio to Text Transcription</h2>
+    <form id="uploadForm">
+        <input type="file" id="audioFile" name="file" accept="audio/*" required>
+        <button type="button" onclick="uploadFile()">Transcribe</button>
+    </form>
+    <p id="transcription"></p>
+
+    <script>
+        async function uploadFile() {
+            const formData = new FormData();
+            const fileInput = document.getElementById("audioFile");
+            formData.append("file", fileInput.files[0]);
+
+            try {
+                const response = await fetch("/transcribe", {
+                    method: "POST",
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                const result = await response.json();
+                document.getElementById("transcription").innerText = result.text || result.error;
+            } catch (error) {
+                document.getElementById("transcription").innerText = "Error: " + error.message;
+            }
+        }
+    </script>
+</body>
+</html>
+
