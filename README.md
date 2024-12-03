@@ -29,14 +29,12 @@ SpeechRecognition: Python library used for transcribing audio to text.
 
 ## File Structure
 ```
-│
-├── app.py                # Python file for backend logic and API
-├── index.html            # Main HTML file containing the layout
-├── style.css             # CSS file for styling the dashboard
-├── requirements.txt      # Python dependencies
-├── audio/                # Folder to store uploaded audio files
-├── transcriptions/       # Folder to store text transcriptions
-├── README.md             # Project documentation (this file)
+audio2text/
+├── app.py
+├── requirements.txt
+├── templates/
+│   └── index.html
+
 ```
 
 
