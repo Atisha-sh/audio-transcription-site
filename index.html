@@ -6,87 +6,102 @@
     <title>Audio to Text Transcription</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            background-color: #f0f4f8;
-            color: #333;
+            font-family: 'Arial', sans-serif;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(to bottom, #4facfe, #00f2fe);
+            color: #333;
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
+            height: 100vh;
         }
-
+        .container {
+            background: #ffffff;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
         h2 {
-            color: #4a90e2;
+            font-size: 1.8rem;
+            color: #007bff;
             margin-bottom: 20px;
         }
-
-        form {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         input[type="file"] {
-            margin-bottom: 15px;
+            width: 100%;
             padding: 10px;
-            border: 2px solid #4a90e2;
-            border-radius: 5px;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            background: #f9f9f9;
             outline: none;
-            transition: border-color 0.3s;
+            cursor: pointer;
+            margin-bottom: 20px;
+            transition: border-color 0.3s ease;
         }
-
-        input[type="file"]:focus {
+        input[type="file"]:hover {
             border-color: #007bff;
         }
-
         button {
-            background-color: #4a90e2;
-            color: white;
+            background-color: #007bff;
+            color: #fff;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
+            padding: 12px 20px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
-            transition: background-color 0.3s;
+            font-weight: bold;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
-
         button:hover {
-            background-color: #007bff;
+            background-color: #0056b3;
+            transform: scale(1.05);
         }
-
-        p {
+        #transcription {
             margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #4a90e2;
-            border-radius: 5px;
-            width: 100%;
-            max-width: 400px;
-            background-color: #e9f5ff;
+            padding: 15px;
+            background: #e9ecef;
+            border-radius: 10px;
             color: #333;
-            text-align: center;
+            font-family: 'Courier New', monospace;
+            word-wrap: break-word;
+            text-align: left;
+            line-height: 1.5;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        footer {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: #555;
         }
     </style>
 </head>
 <body>
-    <h2>Audio to Text Transcription</h2>
-    <form id="uploadForm">
-        <input type="file" id="audioFile" name="file" accept="audio/*" required>
-        <button type="button" onclick="uploadFile()">Transcribe</button>
-    </form>
-    <p id="transcription"></p>
-
+    <div class="container">
+        <h2>Audio to Text Transcription</h2>
+        <form id="uploadForm">
+            <input type="file" id="audioFile" name="file" accept="audio/*" required>
+            <button type="button" onclick="uploadFile()">Transcribe</button>
+        </form>
+        <div id="transcription" hidden></div>
+    </div>
+    <footer>
+        <p></p>
+    </footer>
     <script>
         async function uploadFile() {
             const formData = new FormData();
             const fileInput = document.getElementById("audioFile");
             formData.append("file", fileInput.files[0]);
 
+            const transcriptionBox = document.getElementById("transcription");
+            transcriptionBox.hidden = false;
+
             try {
+                transcriptionBox.innerText = "Processing... Please wait.";
                 const response = await fetch("/transcribe", {
                     method: "POST",
                     body: formData
@@ -97,12 +112,11 @@
                 }
 
                 const result = await response.json();
-                document.getElementById("transcription").innerText = result.text || result.error;
+                transcriptionBox.innerText = result.text || result.error;
             } catch (error) {
-                document.getElementById("transcription").innerText = "Error: " + error.message;
+                transcriptionBox.innerText = "Error: " + error.message;
             }
         }
     </script>
 </body>
 </html>
-
