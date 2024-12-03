@@ -31,6 +31,7 @@ SpeechRecognition: Python library used for transcribing audio to text.
 ```
 audio2text/
 ├── app.py
+├── audio2text.py
 ├── requirements.txt
 ├── templates/
 │   └── index.html
